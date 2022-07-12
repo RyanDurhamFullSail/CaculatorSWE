@@ -41,6 +41,8 @@ Window::Window() : wxFrame(nullptr, wxID_ANY,"Calculator", wxPoint(500,500), wxS
 
 	sizer->Add(TopUI, 0, wxEXPAND | wxTOP | wxBOTTOM, 10);
 
+	sizer->Add(-1, 25);
+
 	wxGridSizer* BottomUI = new wxGridSizer(5, 4, 3, 3);
 
 	BottomUI->Add(mod, 0, wxEXPAND);
