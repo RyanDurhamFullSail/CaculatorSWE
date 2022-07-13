@@ -35,6 +35,8 @@ public:
 	//Textbox
 	wxTextCtrl *calcTextbox;
 
+	void OnButtonClicked(wxCommandEvent& evt);
+
 	wxDECLARE_EVENT_TABLE();
 };
 

@@ -2,18 +2,19 @@
 
 
 wxBEGIN_EVENT_TABLE(Window, wxFrame)
+	EVT_BUTTON(wxID_ANY, Window::OnButtonClicked)
 wxEND_EVENT_TABLE()
 
-Window::Window() : wxFrame(nullptr, wxID_ANY,"Calculator", wxPoint(500,500), wxSize(800,600))
+Window::Window() : wxFrame(nullptr, wxID_ANY, "Calculator", wxPoint(500, 500), wxSize(800, 600))
 {
 
 	wxPanel* panel = new wxPanel(this, -1);
 
 	//intialize textbox and buttons
 	calcTextbox = new wxTextCtrl(panel, wxID_ANY);
-	clear = new wxButton(panel, wxID_ANY,"Clear");
-	zero = new wxButton(panel, wxID_ANY,"0");
-	one = new wxButton(panel, wxID_ANY,"1");
+	clear = new wxButton(panel, wxID_ANY, "Clear");
+	zero = new wxButton(panel, wxID_ANY, "0");
+	one = new wxButton(panel, wxID_ANY, "1");
 	two = new wxButton(panel, wxID_ANY, "2");
 	three = new wxButton(panel, wxID_ANY, "3");
 	four = new wxButton(panel, wxID_ANY, "4");
@@ -33,8 +34,9 @@ Window::Window() : wxFrame(nullptr, wxID_ANY,"Calculator", wxPoint(500,500), wxS
 	sign = new wxButton(panel, wxID_ANY, "+/-");
 	equal = new wxButton(panel, wxID_ANY, "=");
 
-	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
-	wxBoxSizer *TopUI = new wxBoxSizer(wxHORIZONTAL);
+
+	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+	wxBoxSizer* TopUI = new wxBoxSizer(wxHORIZONTAL);
 
 	TopUI->Add(calcTextbox, 1);
 	TopUI->Add(clear, 0, wxRIGHT, 8);
@@ -75,4 +77,11 @@ Window::Window() : wxFrame(nullptr, wxID_ANY,"Calculator", wxPoint(500,500), wxS
 
 Window::~Window()
 {
+}
+
+void Window::OnButtonClicked(wxCommandEvent& evt)
+{
+	wxButton* temp = dynamic_cast<wxButton*>(evt.GetEventObject());
+
+	calcTextbox->SetLabel(calcTextbox->GetLabel() + temp->GetLabel());
 }
