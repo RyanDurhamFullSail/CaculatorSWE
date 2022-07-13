@@ -1,40 +1,43 @@
 #include "Window.h"
+#include "ButtonFactory.h"
 
 
 wxBEGIN_EVENT_TABLE(Window, wxFrame)
+	EVT_BUTTON(wxID_ANY, Window::OnButtonClicked)
 wxEND_EVENT_TABLE()
 
-Window::Window() : wxFrame(nullptr, wxID_ANY,"Calculator", wxPoint(500,500), wxSize(800,600))
+Window::Window() : wxFrame(nullptr, wxID_ANY, "Calculator", wxPoint(500, 500), wxSize(800, 600))
 {
 
 	wxPanel* panel = new wxPanel(this, -1);
 
 	//intialize textbox and buttons
 	calcTextbox = new wxTextCtrl(panel, wxID_ANY);
-	clear = new wxButton(panel, wxID_ANY,"Clear");
-	zero = new wxButton(panel, wxID_ANY,"0");
-	one = new wxButton(panel, wxID_ANY,"1");
-	two = new wxButton(panel, wxID_ANY, "2");
-	three = new wxButton(panel, wxID_ANY, "3");
-	four = new wxButton(panel, wxID_ANY, "4");
-	five = new wxButton(panel, wxID_ANY, "5");
-	six = new wxButton(panel, wxID_ANY, "6");
-	seven = new wxButton(panel, wxID_ANY, "7");
-	eight = new wxButton(panel, wxID_ANY, "8");
-	nine = new wxButton(panel, wxID_ANY, "9");
-	mod = new wxButton(panel, wxID_ANY, "MOD");
-	binary = new wxButton(panel, wxID_ANY, "BINARY");
-	hex = new wxButton(panel, wxID_ANY, "HEX");
-	decimal = new wxButton(panel, wxID_ANY, "DECIMAL");
-	add = new wxButton(panel, wxID_ANY, "+");
-	subtract = new wxButton(panel, wxID_ANY, "-");
-	multiple = new wxButton(panel, wxID_ANY, "*");
-	divide = new wxButton(panel, wxID_ANY, "/");
-	sign = new wxButton(panel, wxID_ANY, "+/-");
-	equal = new wxButton(panel, wxID_ANY, "=");
+	clear = ButtonFactory::CreateButton(panel, "Clear");
+	zero = ButtonFactory::CreateButton(panel, "0");
+	one = ButtonFactory::CreateButton(panel, "1");
+	two = ButtonFactory::CreateButton(panel, "2");
+	three = ButtonFactory::CreateButton(panel, "3");
+	four = ButtonFactory::CreateButton(panel, "4");
+	five = ButtonFactory::CreateButton(panel, "5");
+	six = ButtonFactory::CreateButton(panel, "6");
+	seven = ButtonFactory::CreateButton(panel, "7");
+	eight = ButtonFactory::CreateButton(panel, "8");
+	nine = ButtonFactory::CreateButton(panel, "9");
+	mod = ButtonFactory::CreateButton(panel, "MOD");
+	binary = ButtonFactory::CreateButton(panel, "BINARY");
+	hex = ButtonFactory::CreateButton(panel, "HEX");
+	decimal = ButtonFactory::CreateButton(panel, "DECIMAL");
+	add = ButtonFactory::CreateButton(panel, "+");
+	subtract = ButtonFactory::CreateButton(panel, "-");
+	multiple = ButtonFactory::CreateButton(panel, "*");
+	divide = ButtonFactory::CreateButton(panel, "x");
+	sign = ButtonFactory::CreateButton(panel, "+/-");
+	equal = ButtonFactory::CreateButton(panel, "=");
 
-	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
-	wxBoxSizer *TopUI = new wxBoxSizer(wxHORIZONTAL);
+
+	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+	wxBoxSizer* TopUI = new wxBoxSizer(wxHORIZONTAL);
 
 	TopUI->Add(calcTextbox, 1);
 	TopUI->Add(clear, 0, wxRIGHT, 8);
@@ -75,4 +78,11 @@ Window::Window() : wxFrame(nullptr, wxID_ANY,"Calculator", wxPoint(500,500), wxS
 
 Window::~Window()
 {
+}
+
+void Window::OnButtonClicked(wxCommandEvent& evt)
+{
+	wxButton* temp = dynamic_cast<wxButton*>(evt.GetEventObject());
+
+	calcTextbox->SetLabel(calcTextbox->GetLabel() + temp->GetLabel());
 }
