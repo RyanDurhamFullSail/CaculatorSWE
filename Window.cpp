@@ -30,8 +30,8 @@ Window::Window() : wxFrame(nullptr, wxID_ANY, "Calculator", wxPoint(500, 500), w
 	decimal = ButtonFactory::CreateButton(panel, "DECIMAL");
 	add = ButtonFactory::CreateButton(panel, "+");
 	subtract = ButtonFactory::CreateButton(panel, "-");
-	multiple = ButtonFactory::CreateButton(panel, "*");
-	divide = ButtonFactory::CreateButton(panel, "x");
+	multiple = ButtonFactory::CreateButton(panel, "x");
+	divide = ButtonFactory::CreateButton(panel, "/");
 	sign = ButtonFactory::CreateButton(panel, "+/-");
 	equal = ButtonFactory::CreateButton(panel, "=");
 
