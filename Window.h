@@ -35,6 +35,11 @@ public:
 	//Textbox
 	wxTextCtrl *calcTextbox;
 
+	bool isRight = false;
+	bool clearTxt = false;
+	wxString rightSide = "";
+	wxString op = "";
+
 	void OnButtonClicked(wxCommandEvent& evt);
 
 	wxDECLARE_EVENT_TABLE();

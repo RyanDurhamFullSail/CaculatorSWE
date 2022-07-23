@@ -1,10 +1,12 @@
 #include "Window.h"
 #include "ButtonFactory.h"
-
+#include "CalculatorProcessor.h"
 
 wxBEGIN_EVENT_TABLE(Window, wxFrame)
-	EVT_BUTTON(wxID_ANY, Window::OnButtonClicked)
+EVT_BUTTON(wxID_ANY, Window::OnButtonClicked)
 wxEND_EVENT_TABLE()
+
+CalculatorProcessor* CalculatorProcessor::_calculatorProcessor;
 
 Window::Window() : wxFrame(nullptr, wxID_ANY, "Calculator", wxPoint(500, 500), wxSize(800, 600))
 {
@@ -13,27 +15,27 @@ Window::Window() : wxFrame(nullptr, wxID_ANY, "Calculator", wxPoint(500, 500), w
 
 	//intialize textbox and buttons
 	calcTextbox = new wxTextCtrl(panel, wxID_ANY);
-	clear = ButtonFactory::CreateButton(panel, "Clear");
-	zero = ButtonFactory::CreateButton(panel, "0");
-	one = ButtonFactory::CreateButton(panel, "1");
-	two = ButtonFactory::CreateButton(panel, "2");
-	three = ButtonFactory::CreateButton(panel, "3");
-	four = ButtonFactory::CreateButton(panel, "4");
-	five = ButtonFactory::CreateButton(panel, "5");
-	six = ButtonFactory::CreateButton(panel, "6");
-	seven = ButtonFactory::CreateButton(panel, "7");
-	eight = ButtonFactory::CreateButton(panel, "8");
-	nine = ButtonFactory::CreateButton(panel, "9");
-	mod = ButtonFactory::CreateButton(panel, "MOD");
-	binary = ButtonFactory::CreateButton(panel, "BINARY");
-	hex = ButtonFactory::CreateButton(panel, "HEX");
-	decimal = ButtonFactory::CreateButton(panel, "DECIMAL");
-	add = ButtonFactory::CreateButton(panel, "+");
-	subtract = ButtonFactory::CreateButton(panel, "-");
-	multiple = ButtonFactory::CreateButton(panel, "x");
-	divide = ButtonFactory::CreateButton(panel, "/");
-	sign = ButtonFactory::CreateButton(panel, "+/-");
-	equal = ButtonFactory::CreateButton(panel, "=");
+	clear = ButtonFactory::CreateButton(panel, 1001, "Clear");
+	zero = ButtonFactory::CreateButton(panel, 1002, "0");
+	one = ButtonFactory::CreateButton(panel, 1002, "1");
+	two = ButtonFactory::CreateButton(panel, 1002, "2");
+	three = ButtonFactory::CreateButton(panel, 1002, "3");
+	four = ButtonFactory::CreateButton(panel, 1002, "4");
+	five = ButtonFactory::CreateButton(panel, 1002, "5");
+	six = ButtonFactory::CreateButton(panel, 1002, "6");
+	seven = ButtonFactory::CreateButton(panel, 1002, "7");
+	eight = ButtonFactory::CreateButton(panel, 1002, "8");
+	nine = ButtonFactory::CreateButton(panel, 1002, "9");
+	mod = ButtonFactory::CreateButton(panel, 1003, "MOD");
+	binary = ButtonFactory::CreateButton(panel, 1004, "BINARY");
+	hex = ButtonFactory::CreateButton(panel, 1004, "HEX");
+	decimal = ButtonFactory::CreateButton(panel, 1004, "DECIMAL");
+	add = ButtonFactory::CreateButton(panel, 1003, "+");
+	subtract = ButtonFactory::CreateButton(panel, 1003, "-");
+	multiple = ButtonFactory::CreateButton(panel, 1003, "x");
+	divide = ButtonFactory::CreateButton(panel, 1003, "/");
+	sign = ButtonFactory::CreateButton(panel, 1005, "+/-");
+	equal = ButtonFactory::CreateButton(panel, 1006, "=");
 
 
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
@@ -83,6 +85,104 @@ Window::~Window()
 void Window::OnButtonClicked(wxCommandEvent& evt)
 {
 	wxButton* temp = dynamic_cast<wxButton*>(evt.GetEventObject());
+	CalculatorProcessor* processor = CalculatorProcessor::GetInstance();
 
-	calcTextbox->SetLabel(calcTextbox->GetLabel() + temp->GetLabel());
+	if(temp->GetId() == 1001)
+	{
+		calcTextbox->SetLabel("");
+	}
+	else if (temp->GetId() == 1002)
+	{
+		if (clearTxt)
+		{
+			calcTextbox->SetLabel(temp->GetLabelText());
+			clearTxt = false;
+		}
+		else
+		{
+			calcTextbox->SetLabel(calcTextbox->GetLabel() + temp->GetLabelText());
+
+		}
+
+		if(!isRight)
+		{
+			processor->SetBaseNumber(wxAtoi(calcTextbox->GetLabel()));
+		}
+		else
+		{
+			rightSide = calcTextbox->GetLabel();
+		}
+
+		
+	}
+	else if (temp->GetId() == 1003 && calcTextbox->GetLabel() != "")
+	{
+		if (!isRight) 
+		{
+			isRight = true;
+			op = temp->GetLabel();
+			calcTextbox->SetLabel("");
+		}
+		else
+		{
+			calcTextbox->SetLabel(processor->doOperations(op, wxAtoi(calcTextbox->GetLabel())));
+			op = temp->GetLabel();
+			processor->SetBaseNumber(wxAtoi(calcTextbox->GetLabel()));
+			clearTxt = true;
+		}
+
+	}
+	else if (temp->GetId() == 1004 && calcTextbox->GetLabel() != "")
+	{
+		if (temp->GetLabel() == "BINARY")
+		{
+			rightSide = calcTextbox->GetLabel();
+			calcTextbox->SetLabel(processor->GetBinary());
+		}
+		else if (temp->GetLabel() == "HEX")
+		{
+			rightSide = calcTextbox->GetLabel();
+			calcTextbox->SetLabel(processor->GetHex());
+		}
+		else
+		{
+			calcTextbox->SetLabel(processor->GetDecimal());
+		}
+
+	}
+	else if (temp->GetId() == 1005)
+	{
+		if(!isRight)
+		{
+			calcTextbox->SetLabel(processor->Sign());
+			processor->SetBaseNumber(wxAtoi(calcTextbox->GetLabel()));
+		}
+		else if(rightSide != "")
+		{
+			calcTextbox->SetLabel(processor->Sign(wxAtoi(rightSide)));
+			rightSide = calcTextbox->GetLabel();
+		}
+		else
+		{
+			calcTextbox->SetLabel(processor->Sign(wxAtoi(calcTextbox->GetLabel())));
+			processor->SetBaseNumber(wxAtoi(calcTextbox->GetLabel()));
+		}
+
+
+
+	}
+	else if (temp->GetId() == 1006)
+	{
+		if(isRight)
+		{
+			calcTextbox->SetLabel(processor->doOperations(op, wxAtoi(calcTextbox->GetLabel())));
+			op = "";
+			processor->SetBaseNumber(wxAtoi(calcTextbox->GetLabel()));
+
+			isRight = false;
+			rightSide = "";
+		}
+	}
+
+	
 }
