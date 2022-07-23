@@ -35,8 +35,8 @@ public:
 	//Textbox
 	wxTextCtrl *calcTextbox;
 
+	bool secondRight = false;
 	bool isRight = false;
-	bool clearTxt = false;
 	wxString rightSide = "";
 	wxString op = "";
 
