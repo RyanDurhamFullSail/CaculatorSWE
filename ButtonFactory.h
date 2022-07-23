@@ -4,6 +4,6 @@
 class ButtonFactory
 {
 public:
-	static wxButton* CreateButton(wxPanel* panel,const wxString label);
+	static wxButton* CreateButton(wxPanel* panel, int id, const wxString label);
 };
 
