@@ -1,5 +1,6 @@
 #pragma once
 #include "wx/wx.h"
+#include "CalculatorProcessor.h"
 
 
 class Window : public wxFrame
@@ -34,7 +35,8 @@ public:
 
 	//Textbox
 	wxTextCtrl *calcTextbox;
-
+	wxButton* temp;
+	CalculatorProcessor* processor;
 	bool secondRight = false;
 	bool isRight = false;
 	wxString rightSide = "";

@@ -198,5 +198,4 @@ public:
 
 		return std::to_string(results);
 	}
-
 };

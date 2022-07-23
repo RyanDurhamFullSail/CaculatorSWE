@@ -80,12 +80,14 @@ Window::Window() : wxFrame(nullptr, wxID_ANY, "Calculator", wxPoint(500, 500), w
 
 Window::~Window()
 {
+	delete processor;
+	delete temp;
 }
 
 void Window::OnButtonClicked(wxCommandEvent& evt)
 {
-	wxButton* temp = dynamic_cast<wxButton*>(evt.GetEventObject());
-	CalculatorProcessor* processor = CalculatorProcessor::GetInstance();
+	temp = dynamic_cast<wxButton*>(evt.GetEventObject());
+	processor = CalculatorProcessor::GetInstance();
 
 	if(temp->GetId() == 1001)
 	{
@@ -181,6 +183,8 @@ void Window::OnButtonClicked(wxCommandEvent& evt)
 		isRight = false;
 		secondRight = false;
 	}
+
+
 
 	
 }
