@@ -147,9 +147,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AddCommand.h" />
     <ClInclude Include="ButtonFactory.h" />
     <ClInclude Include="Calculator.h" />
     <ClInclude Include="CalculatorProcessor.h" />
+    <ClInclude Include="DivideCommand.h" />
+    <ClInclude Include="IBaseCommand.h" />
+    <ClInclude Include="ModCommand.h" />
+    <ClInclude Include="MultipleCommand.h" />
+    <ClInclude Include="SubtractCommand.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>

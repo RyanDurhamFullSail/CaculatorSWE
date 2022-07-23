@@ -1,5 +1,12 @@
 #pragma once
 #include "wx/wx.h"
+#include "IBaseCommand.h"
+#include "AddCommand.h"
+#include "SubtractCommand.h"
+#include "MultipleCommand.h"
+#include "DivideCommand.h"
+#include "ModCommand.h"
+#include <vector>
 
 class CalculatorProcessor
 {
@@ -7,6 +14,7 @@ private:
 	CalculatorProcessor() {}
 	static CalculatorProcessor* _calculatorProcessor;
 	int baseNum;
+	std::vector<IBaseCommand*> commands;
 public:
 	static CalculatorProcessor* GetInstance() 
 	{
@@ -25,30 +33,32 @@ public:
 	CalculatorProcessor(CalculatorProcessor& other) = delete;
 	void operator=(const CalculatorProcessor& other) = delete;
 
-	wxString Add(int number)
+	void Add(int number)
 	{
-		return std::to_string((baseNum + number));
-	}	
-	
-	wxString Subtract(int number)
-	{
-		return std::to_string((baseNum - number));
-	}	
-	
-	wxString Multiple(int number)
-	{
-		return std::to_string((baseNum * number));
-	}	
-	
-	wxString Divide(int number)
-	{
-		if(number != 0)
-		{
-			return std::to_string((baseNum / number));
+		AddCommand* add = new AddCommand(baseNum, number);
 
-		}
+		commands.push_back(add);
+	}	
+	
+	void Subtract(int number)
+	{
+		SubtractCommand* sub = new SubtractCommand(baseNum, number);
 
-		return "ERROR";
+		commands.push_back(sub);
+	}
+	
+	void Multiple(int number)
+	{
+		MultipleCommand* multiple = new MultipleCommand(baseNum, number);
+
+		commands.push_back(multiple);
+	}
+	
+	void Divide(int number)
+	{
+		DivideCommand* divide = new DivideCommand(baseNum, number);
+
+		commands.push_back(divide);
 	}
 
 	wxString Sign()
@@ -66,15 +76,11 @@ public:
 		return std::to_string(baseNum);
 	}
 
-	wxString Mod(int number)
+	void Mod(int number)
 	{
-		if (number != 0)
-		{
-			return std::to_string((baseNum % number));
+		ModCommand* mod = new ModCommand(baseNum, number);
 
-		}
-
-		return "ERROR";
+		commands.push_back(mod);
 	}
 
 	wxString GetHex()
@@ -147,31 +153,50 @@ public:
 
 	}
 
-	wxString doOperations(wxString op, int num)
+	void setOperations(wxString op, int num)
 	{
 		if (op == "+")
 		{
-			return _calculatorProcessor->Add(num);
+			_calculatorProcessor->Add(num);
 		}
 		else if (op == "-")
 		{
-			return _calculatorProcessor->Subtract(num);
+			_calculatorProcessor->Subtract(num);
 
 		}
 		else if (op == "x")
 		{
-			return _calculatorProcessor->Multiple(num);
+			_calculatorProcessor->Multiple(num);
 		}
 		else if (op == "/")
 		{
-			return _calculatorProcessor->Divide(num);
+			_calculatorProcessor->Divide(num);
 
 		}
 		else if (op == "MOD")
 		{
-			return _calculatorProcessor->Mod(num);
+			_calculatorProcessor->Mod(num);
 		}
 
+	}
+
+	wxString doOperations()
+	{
+		int results = 0;
+
+		for(int i = 0; i < commands.size(); i++)
+		{
+			results += commands[i]->Execute();
+		}
+
+		for (int i = 0; i < commands.size(); i++)
+		{
+			delete commands[i];
+		}
+
+		commands.clear();
+
+		return std::to_string(results);
 	}
 
 };

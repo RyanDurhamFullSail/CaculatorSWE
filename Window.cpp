@@ -92,17 +92,8 @@ void Window::OnButtonClicked(wxCommandEvent& evt)
 		calcTextbox->SetLabel("");
 	}
 	else if (temp->GetId() == 1002)
-	{
-		if (clearTxt)
-		{
-			calcTextbox->SetLabel(temp->GetLabelText());
-			clearTxt = false;
-		}
-		else
-		{
-			calcTextbox->SetLabel(calcTextbox->GetLabel() + temp->GetLabelText());
-
-		}
+	{	
+		calcTextbox->SetLabel(calcTextbox->GetLabel() + temp->GetLabelText());
 
 		if(!isRight)
 		{
@@ -112,23 +103,29 @@ void Window::OnButtonClicked(wxCommandEvent& evt)
 		{
 			rightSide = calcTextbox->GetLabel();
 		}
-
 		
 	}
-	else if (temp->GetId() == 1003 && calcTextbox->GetLabel() != "")
+	else if (temp->GetId() == 1003 )
 	{
-		if (!isRight) 
+		if (!isRight)
 		{
 			isRight = true;
 			op = temp->GetLabel();
 			calcTextbox->SetLabel("");
 		}
+		else if(!secondRight)
+		{
+			processor->setOperations(op, wxAtoi(calcTextbox->GetLabel()));
+			op = temp->GetLabel();
+			calcTextbox->SetLabel("");
+			secondRight = true;
+		}
 		else
 		{
-			calcTextbox->SetLabel(processor->doOperations(op, wxAtoi(calcTextbox->GetLabel())));
+			processor->SetBaseNumber(wxAtoi(processor->doOperations()));
+			processor->setOperations(op, wxAtoi(calcTextbox->GetLabel()));
 			op = temp->GetLabel();
-			processor->SetBaseNumber(wxAtoi(calcTextbox->GetLabel()));
-			clearTxt = true;
+			calcTextbox->SetLabel("");
 		}
 
 	}
@@ -173,15 +170,16 @@ void Window::OnButtonClicked(wxCommandEvent& evt)
 	}
 	else if (temp->GetId() == 1006)
 	{
-		if(isRight)
+		if(secondRight)
 		{
-			calcTextbox->SetLabel(processor->doOperations(op, wxAtoi(calcTextbox->GetLabel())));
-			op = "";
-			processor->SetBaseNumber(wxAtoi(calcTextbox->GetLabel()));
-
-			isRight = false;
-			rightSide = "";
+			processor->SetBaseNumber(wxAtoi(processor->doOperations()));
 		}
+		processor->setOperations(op, wxAtoi(calcTextbox->GetLabel()));
+		calcTextbox->SetLabel(processor->doOperations());
+		op = "";
+		processor->SetBaseNumber(wxAtoi(calcTextbox->GetLabel()));
+		isRight = false;
+		secondRight = false;
 	}
 
 	
