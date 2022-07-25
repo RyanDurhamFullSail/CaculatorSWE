@@ -89,7 +89,7 @@ public:
 		int number = std::abs(baseNum);
 		bool neg = baseNum < 0;
 
-		while(number >= 0)
+		while(number > 0)
 		{
 			int mod = number % 16;
 			if(mod < 10)
