@@ -15,7 +15,12 @@ public:
 
 	int doOperation()
 	{
-		return leftSide / rightSide;
+		if(rightSide != 0)
+		{
+			return leftSide / rightSide;
+		}
+
+		return -1;
 	}
 
 	int Execute()
